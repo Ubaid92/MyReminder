@@ -16,7 +16,16 @@ class ReminderRepository {
         reminderList.find { it.id == reminderData.id }?.isDone = reminderData.isDone
         firebaseDb.saveToDatabase(reminderList)
     }
-    fun getAllData()=reminderList
+
+    fun getAllData() = reminderList
+
+    fun getDataAsPerEmail(callback:(ArrayList<ReminderData>)->Unit){
+        firebaseDb.getData{
+            reminderList.clear()
+            reminderList.addAll(it)
+            callback(it)
+        }
+    }
 
 //    fun getTodayData() {
 //        reminderList.filter {

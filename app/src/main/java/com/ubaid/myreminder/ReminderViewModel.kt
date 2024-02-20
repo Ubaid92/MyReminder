@@ -33,8 +33,10 @@ class ReminderViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    fun getTodayTask(){
-        reminderTaskLiveData.postValue(repository.getAllData())
+    fun getDataFromId(){
+        repository.getDataAsPerEmail{
+            reminderTaskLiveData.postValue(it)
+        }
     }
 
 }

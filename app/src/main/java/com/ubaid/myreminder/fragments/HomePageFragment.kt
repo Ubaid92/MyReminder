@@ -9,7 +9,6 @@ import com.google.firebase.ktx.Firebase
 import com.ubaid.myreminder.R
 import com.ubaid.myreminder.ReminderViewModel
 import com.ubaid.myreminder.adapter.TodayReminderAdapter
-import com.ubaid.myreminder.auth.FireBaseAuth
 import com.ubaid.myreminder.auth.LogInPageFragment
 import com.ubaid.myreminder.data.ReminderData
 import com.ubaid.myreminder.databinding.HomePageFragmentBinding
@@ -26,7 +25,8 @@ class HomePageFragment : BaseFragment(R.layout.home_page_fragment) {
         binding.recyclerView.adapter = todayAdapter
         setupListeners()
 
-        if (Firebase.auth.currentUser != null){
+        if (Firebase.auth.currentUser != null) {
+            reminderViewModel.getDataFromId()
             binding.userNameText.text = "Hi ${Firebase.auth.currentUser?.displayName}"
             Glide.with(this).load(Firebase.auth.currentUser?.photoUrl).into(binding.loginIcon)
         } else {
@@ -63,7 +63,13 @@ class HomePageFragment : BaseFragment(R.layout.home_page_fragment) {
         val taskCount = "${dataList.size} Tasks"
         binding.taskCount.text = taskCount
         val completed = dataList.count { it.isDone }
-        binding.taskProgress.progress = ((completed.toFloat() / dataList.size) * 100).roundToInt()
-        binding.taskProgressText.text = String.format("%2d%%",binding.taskProgress.progress)
+        if (dataList.isEmpty()){
+            binding.taskProgress.progress = 0
+            binding.taskProgressText.text = "0"
+        }else{
+            binding.taskProgress.progress = ((completed.toFloat() / dataList.size) * 100).roundToInt()
+            binding.taskProgressText.text = String.format("%2d%%", binding.taskProgress.progress)
+        }
+
     }
 }

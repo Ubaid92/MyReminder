@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
@@ -15,11 +16,13 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
 import com.ubaid.myreminder.R
+import com.ubaid.myreminder.ReminderViewModel
 
 class FireBaseAuth {
     private lateinit var auth: FirebaseAuth
     private lateinit var oneTapClient: SignInClient
     private var currentUser: FirebaseUser? = null
+    lateinit var reminderViewModel: ReminderViewModel
 
     fun auth(context: Activity) {
         auth = Firebase.auth
@@ -49,6 +52,7 @@ class FireBaseAuth {
     }
 
     fun result(activity: AppCompatActivity ,requestCode: Int, resultCode: Int, data: Intent?){
+        reminderViewModel = ViewModelProvider(activity)[ReminderViewModel::class.java]
         auth = Firebase.auth
         oneTapClient = Identity.getSignInClient(activity)
         val googleCredential = oneTapClient.getSignInCredentialFromIntent(data)
@@ -66,6 +70,7 @@ class FireBaseAuth {
                             val user = auth.currentUser
                             Toast.makeText(activity, "Login Success", Toast.LENGTH_SHORT).show()
                             activity.supportFragmentManager.popBackStack()
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.exception)

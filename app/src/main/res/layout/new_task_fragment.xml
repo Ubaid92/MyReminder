@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:background="@color/white"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="40dp"
+        android:src="@drawable/baseline_arrow_back_ios_new_24"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create New Reminder"
+        android:textColor="@color/black"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toBottomOf="@+id/backButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/backButton" />
+
+    <TextView
+        android:id="@+id/reminderNameTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="Reminder Name"
+        android:textColor="@color/black"
+        android:textSize="25sp"
+        app:layout_constraintStart_toStartOf="@+id/backButton"
+        app:layout_constraintTop_toBottomOf="@+id/backButton" />
+
+    <EditText
+        android:id="@+id/reminderNameInput"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginHorizontal="40dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/edit_text_bg"
+        android:imeOptions="actionDone"
+        android:singleLine="true"
+        android:hint="Name"
+        android:paddingHorizontal="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/reminderNameTitle" />
+
+    <TextView
+        android:id="@+id/priorityTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Priority"
+        android:textColor="@color/black"
+        android:textSize="25sp"
+        app:layout_constraintStart_toStartOf="@+id/reminderNameInput"
+        app:layout_constraintTop_toBottomOf="@+id/reminderNameInput" />
+
+    <RadioGroup
+        android:id="@+id/radio_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:weightSum="3"
+        app:layout_constraintStart_toStartOf="@+id/priorityTitle"
+        app:layout_constraintTop_toBottomOf="@+id/priorityTitle">
+
+        <RadioButton
+            android:id="@+id/priorityHigh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/radio_selector"
+            android:button="@null"
+            android:elevation="2dp"
+            android:gravity="center"
+            android:layout_margin="8dp"
+            android:text="High"
+            android:textColor="@drawable/text_color"
+            android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/priorityMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/radio_selector"
+            android:button="@null"
+            android:elevation="2dp"
+            android:gravity="center"
+            android:layout_margin="8dp"
+            android:text="Medium"
+            android:textColor="@drawable/text_color"
+            android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/priorityLow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/radio_selector"
+            android:button="@null"
+            android:elevation="2dp"
+            android:gravity="center"
+            android:layout_margin="8dp"
+            android:text="Low"
+            android:textColor="@drawable/text_color"
+            android:textSize="18sp" />
+
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/date_picker_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Date"
+        android:textColor="@color/black"
+        android:textSize="25sp"
+        app:layout_constraintStart_toStartOf="@+id/priorityTitle"
+        app:layout_constraintTop_toBottomOf="@+id/radio_group" />
+
+    <TextView
+        android:id="@+id/date_picker_actions"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginHorizontal="40dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/edit_text_bg"
+        android:drawableEnd="@drawable/baseline_date_range_24"
+        android:gravity="center"
+        android:paddingHorizontal="16dp"
+        android:text="Select date"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/date_picker_title"
+        app:layout_constraintTop_toBottomOf="@+id/date_picker_title" />
+
+    <TextView
+        android:id="@+id/time_picker_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Time"
+        android:textColor="@color/black"
+        android:textSize="25sp"
+        app:layout_constraintStart_toStartOf="@+id/date_picker_actions"
+        app:layout_constraintTop_toBottomOf="@+id/date_picker_actions" />
+
+    <TextView
+        android:id="@+id/time_picker_actions"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginHorizontal="40dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/edit_text_bg"
+        android:drawableEnd="@drawable/baseline_access_time_24"
+        android:gravity="center"
+        android:paddingHorizontal="16dp"
+        android:text="Select time"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/time_picker_title"
+        app:layout_constraintTop_toBottomOf="@+id/time_picker_title" />
+
+    <CheckBox
+        android:id="@+id/add_reminder_checkbox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="20dp"
+        android:gravity="center"
+        android:layout_marginHorizontal="40dp"
+        android:scaleX=".7"
+        android:scaleY=".7"
+        android:button="@drawable/check_box"
+        android:text="Add Reminder"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_create_reminder"
+        app:layout_constraintStart_toStartOf="@+id/time_picker_actions"
+        app:layout_constraintTop_toBottomOf="@+id/time_picker_actions" />
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_create_reminder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="40dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/button_style"
+        android:backgroundTint="@color/lite_blue"
+        android:text="Create Reminder"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

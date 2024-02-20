@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/welcome_screen_bg"
+    android:layout_height="match_parent">
+<com.airbnb.lottie.LottieAnimationView
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    android:layout_marginStart="50dp"
+    app:lottie_rawRes="@raw/task"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_marginTop="40dp"
+        android:layout_height="wrap_content"
+        android:text="Welcome to My Reminder"
+        android:textColor="@color/black"
+        android:textSize="28sp"
+        android:gravity="center"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="This app created for to do task with user friendly interface and easy to use"
+        android:textSize="16sp"
+        android:layout_marginHorizontal="30dp"
+        android:layout_weight="1"/>
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_start"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Let's Start"
+        android:background="@drawable/button_style"
+        android:textAllCaps="false"
+        android:layout_marginHorizontal="30dp"
+        android:textColor="@color/white"
+        android:layout_marginBottom="30dp"
+        android:backgroundTint="@color/lite_blue"
+        android:textSize="18sp"/>
+
+
+
+</LinearLayout>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/categoryImg"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/pk"
+            android:layout_margin="20dp"/>
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Any Reminder"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:layout_toEndOf="@+id/categoryImg"
+            android:layout_marginTop="20dp"/>
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="normal"
+            android:text="3.40 AM"
+            android:layout_toEndOf="@+id/categoryImg"
+            android:layout_alignBottom="@+id/categoryImg"
+            android:layout_marginTop="20dp"/>
+
+        <CheckBox
+            android:id="@+id/checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:button="@drawable/check_box"
+            android:scaleX=".7"
+            android:scaleY=".7"
+            android:checked="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp" />
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

@@ -1,17 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="90dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <ImageView
+
+        <CheckBox
             android:id="@+id/categoryImg"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/pk"
-            android:layout_margin="20dp"/>
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:buttonTint="@color/white"
+            app:buttonTint="@color/white"
+            android:background="@drawable/bg_med"
+            android:layout_marginBottom="20dp"
+            android:button="@drawable/checkbox_selector" />
         <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
@@ -39,11 +47,22 @@
             android:button="@drawable/check_box"
             android:scaleX=".7"
             android:scaleY=".7"
+            android:visibility="gone"
             android:checked="true"
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="20dp" />
+
+        <ImageView
+            android:id="@+id/notificationIcon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="8dp"
+            android:layout_marginEnd="20dp"
+            android:src="@drawable/notification_icon"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"/>
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>

@@ -1,10 +1,12 @@
 package com.ubaid.myreminder.fragments
 
+import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.icu.util.Calendar
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.ubaid.myreminder.R
@@ -13,6 +15,7 @@ import com.ubaid.myreminder.alarm.AndroidAlarmScheduler
 import com.ubaid.myreminder.data.ReminderData
 import com.ubaid.myreminder.databinding.NewTaskFragmentBinding
 import com.ubaid.myreminder.util.DateUtils
+
 
 class NewTaskFragment : BaseFragment(R.layout.new_task_fragment) {
     lateinit var reminderViewModel: ReminderViewModel
@@ -25,52 +28,22 @@ class NewTaskFragment : BaseFragment(R.layout.new_task_fragment) {
             popFragment()
         }
 
-
-
+        binding.radioGroup.setOnCheckedChangeListener { _, _ ->
+            hideKeyboard()
+        }
 
         binding.datePickerActions.setOnClickListener {
-            val c = Calendar.getInstance()
-            val year = c.get(Calendar.YEAR)
-            val month = c.get(Calendar.MONTH)
-            val day = c.get(Calendar.DAY_OF_MONTH)
-
-
-            val dpd = DatePickerDialog(
-                requireActivity(),
-                { _, cYear, monthOfYear, dayOfMonth ->
-                    reminderViewModel.selectedTime.set(Calendar.YEAR, cYear)
-                    reminderViewModel.selectedTime.set(Calendar.MONTH, monthOfYear)
-                    reminderViewModel.selectedTime.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                    binding.datePickerActions.text =
-                        DateUtils.getFormattedDate(reminderViewModel.selectedTime)
-                },
-                year,
-                month,
-                day
-            )
-
-            dpd.show()
+            hideKeyboard()
+            showDatePicker()
         }
 
         binding.timePickerActions.setOnClickListener {
-            val cal = Calendar.getInstance()
-            val timeSetListener = TimePickerDialog.OnTimeSetListener { timePicker, hour, minute ->
-                reminderViewModel.selectedTime.set(Calendar.HOUR_OF_DAY, hour)
-                reminderViewModel.selectedTime.set(Calendar.MINUTE, minute)
-                binding.timePickerActions.text =
-                    DateUtils.getFormattedTime(reminderViewModel.selectedTime.time.time)
-            }
-            TimePickerDialog(
-                requireContext(),
-                timeSetListener,
-                cal.get(Calendar.HOUR_OF_DAY),
-                cal.get(Calendar.MINUTE),
-                true
-            ).show()
+            hideKeyboard()
+            showTimePicker()
         }
 
         binding.btnCreateReminder.setOnClickListener {
-
+            hideKeyboard()
             val reminderTitle = binding.reminderNameInput.text.toString()
             if (reminderTitle.isEmpty() || binding.datePickerActions.text == "Select date"
                 || binding.timePickerActions.text == "Time"
@@ -79,14 +52,14 @@ class NewTaskFragment : BaseFragment(R.layout.new_task_fragment) {
                 return@setOnClickListener
             }
             val priority = when (binding.radioGroup.checkedRadioButtonId) {
-                R.id.priorityHigh -> R.drawable.high
-                R.id.priorityMedium -> R.drawable.medium
-                R.id.priorityLow -> R.drawable.low
-                else -> 0
+                R.id.priorityHigh -> "High"
+                R.id.priorityMedium -> "Medium"
+                R.id.priorityLow -> "Low"
+                else -> ""
 
             }
 
-            if (priority == 0) {
+            if (priority.isEmpty()) {
                 Toast.makeText(requireContext(), "Select priority first", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
@@ -94,18 +67,68 @@ class NewTaskFragment : BaseFragment(R.layout.new_task_fragment) {
                 isDone = false,
                 title = reminderTitle,
                 time = reminderViewModel.selectedTime.time.time,
-                priority = priority
+                priority = priority,
+                isAlert = binding.addReminderCheckbox.isChecked
             )
+            setupAlarmIfRequired(reminderData)
             reminderViewModel.save(reminderData)
-            if (binding.addReminderCheckbox.isChecked){
-                val alarmScheduler = AndroidAlarmScheduler(requireContext())
-                alarmScheduler.schedule(reminderData)
-            }
 
             popFragment()
 
         }
 
+    }
 
+    private fun showDatePicker() {
+        val c = Calendar.getInstance()
+        val year = c.get(Calendar.YEAR)
+        val month = c.get(Calendar.MONTH)
+        val day = c.get(Calendar.DAY_OF_MONTH)
+
+
+        val dpd = DatePickerDialog(
+            requireActivity(),
+            { _, cYear, monthOfYear, dayOfMonth ->
+                reminderViewModel.selectedTime.set(Calendar.YEAR, cYear)
+                reminderViewModel.selectedTime.set(Calendar.MONTH, monthOfYear)
+                reminderViewModel.selectedTime.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                binding.datePickerActions.text =
+                    DateUtils.getFormattedDate(reminderViewModel.selectedTime)
+            },
+            year,
+            month,
+            day
+        )
+
+        dpd.show()
+    }
+
+    private fun showTimePicker() {
+        val cal = Calendar.getInstance()
+        val timeSetListener = TimePickerDialog.OnTimeSetListener { timePicker, hour, minute ->
+            reminderViewModel.selectedTime.set(Calendar.HOUR_OF_DAY, hour)
+            reminderViewModel.selectedTime.set(Calendar.MINUTE, minute)
+            reminderViewModel.selectedTime.set(Calendar.SECOND, 0)
+            binding.timePickerActions.text =
+                DateUtils.getFormattedTime(reminderViewModel.selectedTime.time.time)
+        }
+        TimePickerDialog(
+            requireContext(),
+            timeSetListener,
+            cal.get(Calendar.HOUR_OF_DAY),
+            cal.get(Calendar.MINUTE),
+            true
+        ).show()
+    }
+
+    private fun setupAlarmIfRequired(reminderData: ReminderData) {
+        if (binding.addReminderCheckbox.isChecked) {
+            val alarmScheduler = AndroidAlarmScheduler(requireContext())
+            alarmScheduler.schedule(reminderData)
+        }
+    }
+    fun hideKeyboard() {
+        val imm = requireActivity().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(requireView().windowToken, 0)
     }
 }

@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
-import com.ubaid.myreminder.auth.FireBaseAuth
+import com.ubaid.myreminder.auth.AppAuthManager
 import com.ubaid.myreminder.data.AppSharedPrefsManager
 import com.ubaid.myreminder.databinding.ActivityMainBinding
 import com.ubaid.myreminder.fragments.BaseFragment
@@ -16,7 +16,7 @@ import com.ubaid.myreminder.fragments.WelcomeScreenFragment
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
-    private val fbAuth = FireBaseAuth()
+    private val fbAuth = AppAuthManager()
     private val auth: FirebaseAuth = Firebase.auth
 
 

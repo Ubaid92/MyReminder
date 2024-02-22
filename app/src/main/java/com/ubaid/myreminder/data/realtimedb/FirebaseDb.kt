@@ -8,7 +8,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.getValue
 import com.google.firebase.ktx.Firebase
-import com.ubaid.myreminder.auth.FireBaseAuth.Companion.TAG
+import com.ubaid.myreminder.auth.AppAuthManager.Companion.TAG
 import com.ubaid.myreminder.data.ReminderData
 
 class FirebaseDb {
@@ -18,7 +18,7 @@ class FirebaseDb {
 
     fun saveToDatabase(reminderList: ArrayList<ReminderData>) {
         Firebase.auth.currentUser?.email?.let { userEmail ->
-            myRef.child(userEmail.replace("@gmail.com", ""))
+            myRef.child(userEmail.toKey())
                 .setValue(reminderList)
         }
     }
@@ -26,7 +26,8 @@ class FirebaseDb {
     fun getData(callback: (ArrayList<ReminderData>) -> Unit) {
         val userEmail = Firebase.auth.currentUser?.email ?: return
         FirebaseDatabase.getInstance("https://my-reminder-df003-default-rtdb.asia-southeast1.firebasedatabase.app")
-        myRef.child(userEmail.replace("@gmail.com", "")).addValueEventListener(object : ValueEventListener {
+        myRef.child(userEmail.toKey()).addValueEventListener(object :
+            ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
@@ -40,5 +41,9 @@ class FirebaseDb {
                 Log.w(TAG, "Failed to read value.", error.toException())
             }
         })
+    }
+
+    fun String.toKey():String{
+        return this.replace("@gmail.com","").replace(".","")
     }
 }

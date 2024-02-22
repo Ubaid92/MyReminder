@@ -4,7 +4,6 @@ import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
 import com.ubaid.myreminder.R
 import com.ubaid.myreminder.data.ReminderData
@@ -14,6 +13,7 @@ import com.ubaid.myreminder.util.DateUtils
 class TodayReminderAdapter : RecyclerView.Adapter<TodayReminderAdapter.ViewHolder>() {
 
     var todayReminderList = arrayListOf<ReminderData>()
+    var selectionList = arrayListOf<ReminderData>()
     lateinit var isCompletedListener: (ReminderData, Boolean) -> Unit
 
     inner class ViewHolder(private var binding: DailyListItemsBinding) :
@@ -21,7 +21,14 @@ class TodayReminderAdapter : RecyclerView.Adapter<TodayReminderAdapter.ViewHolde
         fun hold(reminderData: ReminderData) {
             binding.title.text = reminderData.title
             binding.time.text = DateUtils.getFormattedTime(reminderData.time)
-            binding.categoryImg.isChecked = reminderData.isDone
+            binding.categoryImg.isChecked = reminderData.isDone.apply {
+                binding.status.setImageResource(
+                    if (this) R.drawable.check_mark
+                    else R.drawable
+                        .time
+                )
+            }
+
             binding.categoryImg.setBackgroundResource(
                 when (reminderData.priority) {
                     "High" -> R.drawable.bg_high
@@ -35,9 +42,11 @@ class TodayReminderAdapter : RecyclerView.Adapter<TodayReminderAdapter.ViewHolde
                 if (isChecked) {
                     binding.title.setTypeface(binding.title.typeface, Typeface.ITALIC)
                     binding.time.setTypeface(binding.time.typeface, Typeface.ITALIC)
+                    binding.status.setImageResource(R.drawable.check_mark)
                 } else {
                     binding.title.setTypeface(binding.title.typeface, Typeface.BOLD)
                     binding.time.typeface = null
+                    binding.status.setImageResource(R.drawable.time)
                 }
                 isCompletedListener(reminderData, isChecked)
             }

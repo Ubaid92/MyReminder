@@ -1,5 +1,6 @@
 package com.ubaid.myreminder.fragments
 
+import android.animation.ValueAnimator
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
@@ -67,8 +68,15 @@ class HomePageFragment : BaseFragment(R.layout.home_page_fragment) {
             binding.taskProgress.progress = 0
             binding.taskProgressText.text = "0"
         }else{
-            binding.taskProgress.progress = ((completed.toFloat() / dataList.size) * 100).roundToInt()
-            binding.taskProgressText.text = String.format("%2d%%", binding.taskProgress.progress)
+            val updatedProgress = ((completed.toFloat() / dataList.size) * 100).roundToInt()
+            val animator = ValueAnimator.ofInt(binding.taskProgress.progress, updatedProgress)
+            animator.duration = 300
+            animator.addUpdateListener {
+                binding.taskProgress.progress = it.animatedValue as Int
+                binding.taskProgressText.text = String.format("%2d%%", it.animatedValue as Int)
+            }
+            animator.start()
+
         }
 
     }

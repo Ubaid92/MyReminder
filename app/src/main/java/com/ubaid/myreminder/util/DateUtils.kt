@@ -12,7 +12,6 @@ object DateUtils {
     fun getFormattedDate(
         calendar: Calendar
     ): String? {
-        return SimpleDateFormat("yyyy-MMM-dd", Locale.US).format(calendar.time)
-
+        return SimpleDateFormat("dd-MMM-yyyy", Locale.US).format(calendar.time)
     }
 }

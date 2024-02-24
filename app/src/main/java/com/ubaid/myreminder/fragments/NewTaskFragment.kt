@@ -115,9 +115,9 @@ class NewTaskFragment : BaseFragment(R.layout.new_task_fragment) {
         TimePickerDialog(
             requireContext(),
             timeSetListener,
-            cal.get(Calendar.HOUR_OF_DAY),
-            cal.get(Calendar.MINUTE),
-            true
+            cal[Calendar.HOUR_OF_DAY],
+            cal[Calendar.MINUTE],
+            false
         ).show()
     }
 

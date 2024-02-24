@@ -4,6 +4,7 @@ import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.ubaid.myreminder.R
 import com.ubaid.myreminder.data.ReminderData
@@ -15,12 +16,31 @@ class TodayReminderAdapter : RecyclerView.Adapter<TodayReminderAdapter.ViewHolde
     var todayReminderList = arrayListOf<ReminderData>()
     var selectionList = arrayListOf<ReminderData>()
     lateinit var isCompletedListener: (ReminderData, Boolean) -> Unit
+    lateinit var isSelectingListener: (Boolean) -> Unit
+    var isSelecting: Boolean = false
+        set(value) {
+            field = value
+            if (!field) {
+                selectionList.clear()
+                isSelectingListener(false)
+            }
+        }
 
     inner class ViewHolder(private var binding: DailyListItemsBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun hold(reminderData: ReminderData) {
+        fun hold(reminderData: ReminderData, position: Int) {
+            val context = binding.root.context
             binding.title.text = reminderData.title
             binding.time.text = DateUtils.getFormattedTime(reminderData.time)
+            binding.root.setCardBackgroundColor(
+                ContextCompat.getColor(
+                    context,
+                    if (selectionList.contains(reminderData))
+                        R.color.lite_blue
+                    else
+                        R.color.white
+                )
+            )
             binding.categoryImg.isChecked = reminderData.isDone.apply {
                 binding.status.setImageResource(
                     if (this) R.drawable.check_mark
@@ -29,6 +49,7 @@ class TodayReminderAdapter : RecyclerView.Adapter<TodayReminderAdapter.ViewHolde
                 )
             }
 
+
             binding.categoryImg.setBackgroundResource(
                 when (reminderData.priority) {
                     "High" -> R.drawable.bg_high
@@ -36,8 +57,27 @@ class TodayReminderAdapter : RecyclerView.Adapter<TodayReminderAdapter.ViewHolde
                     else -> R.drawable.bg_low
                 }
             )
-            binding.notificationIcon.visibility = if (reminderData.isAlert) View.VISIBLE else
+            binding.notificationIcon.visibility = if (reminderData.isAlert)
+                View.VISIBLE
+            else
                 View.INVISIBLE
+
+            binding.root.setOnClickListener {
+                if (selectionList.any { it.id == reminderData.id }) {
+                    selectionList.remove(reminderData)
+                    checkIfSelecting(position)
+                } else if (isSelecting) {
+                    selectionList.add(reminderData)
+                    checkIfSelecting(position)
+                }
+            }
+
+            binding.root.setOnLongClickListener {
+                selectionList.add(reminderData)
+                checkIfSelecting(position)
+                true
+            }
+
             binding.categoryImg.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
                     binding.title.setTypeface(binding.title.typeface, Typeface.ITALIC)
@@ -50,6 +90,12 @@ class TodayReminderAdapter : RecyclerView.Adapter<TodayReminderAdapter.ViewHolde
                 }
                 isCompletedListener(reminderData, isChecked)
             }
+        }
+
+        private fun checkIfSelecting(position: Int) {
+            isSelecting = selectionList.isNotEmpty()
+            isSelectingListener(isSelecting)
+            notifyItemChanged(position)
         }
 
     }
@@ -65,7 +111,7 @@ class TodayReminderAdapter : RecyclerView.Adapter<TodayReminderAdapter.ViewHolde
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.hold(todayReminderList[position])
+        holder.hold(todayReminderList[position], position)
     }
 
 }

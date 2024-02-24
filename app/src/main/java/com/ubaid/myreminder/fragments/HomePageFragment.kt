@@ -37,6 +37,18 @@ class HomePageFragment : BaseFragment(R.layout.home_page_fragment) {
     }
 
     private fun setupListeners() {
+        todayAdapter.isSelectingListener = {
+            binding.deleteReminderButton.visibility = if (it) View.VISIBLE else View.GONE
+        }
+
+        binding.deleteReminderButton.setOnClickListener {
+            if (todayAdapter.isSelecting){
+                todayAdapter.selectionList.map {reminder ->
+                    reminderViewModel.delete(reminder)
+                }
+                todayAdapter.isSelecting = false
+            }
+        }
         todayAdapter.isCompletedListener = { reminderData, isChecked ->
             reminderData.isDone = isChecked
             reminderViewModel.update(reminderData)
@@ -66,7 +78,7 @@ class HomePageFragment : BaseFragment(R.layout.home_page_fragment) {
         val completed = dataList.count { it.isDone }
         if (dataList.isEmpty()){
             binding.taskProgress.progress = 0
-            binding.taskProgressText.text = "0"
+            binding.taskProgressText.text = "0%"
         }else{
             val updatedProgress = ((completed.toFloat() / dataList.size) * 100).roundToInt()
             val animator = ValueAnimator.ofInt(binding.taskProgress.progress, updatedProgress)
@@ -76,7 +88,6 @@ class HomePageFragment : BaseFragment(R.layout.home_page_fragment) {
                 binding.taskProgressText.text = String.format("%2d%%", it.animatedValue as Int)
             }
             animator.start()
-
         }
 
     }

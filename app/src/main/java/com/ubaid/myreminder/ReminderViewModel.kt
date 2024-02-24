@@ -25,6 +25,11 @@ class ReminderViewModel(application: Application) : AndroidViewModel(application
         reminderTaskLiveData.postValue(repository.getAllData())
     }
 
+    fun delete(reminderData: ReminderData){
+        repository.deleteReminder(reminderData)
+        reminderTaskLiveData.postValue(repository.getAllData())
+    }
+
     private fun updateScheduleStatus(reminderData: ReminderData) {
         if (reminderData.isDone) {
             alarmScheduler.cancel(reminderData)

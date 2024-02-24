@@ -5,10 +5,15 @@ import com.ubaid.myreminder.data.realtimedb.FirebaseDb
 class ReminderRepository {
     private val reminderList = arrayListOf<ReminderData>()
 
-    var firebaseDb = FirebaseDb()
+    private var firebaseDb = FirebaseDb()
 
     fun saveReminder(reminderData: ReminderData) {
         reminderList.add(reminderData)
+        firebaseDb.saveToDatabase(reminderList)
+    }
+
+    fun deleteReminder(reminderData: ReminderData){
+        reminderList.remove(reminderData)
         firebaseDb.saveToDatabase(reminderList)
     }
 

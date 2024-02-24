@@ -1,5 +1,6 @@
 package com.ubaid.myreminder.fragments
 
+import android.animation.ValueAnimator
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
@@ -36,6 +37,18 @@ class HomePageFragment : BaseFragment(R.layout.home_page_fragment) {
     }
 
     private fun setupListeners() {
+        todayAdapter.isSelectingListener = {
+            binding.deleteReminderButton.visibility = if (it) View.VISIBLE else View.GONE
+        }
+
+        binding.deleteReminderButton.setOnClickListener {
+            if (todayAdapter.isSelecting){
+                todayAdapter.selectionList.map {reminder ->
+                    reminderViewModel.delete(reminder)
+                }
+                todayAdapter.isSelecting = false
+            }
+        }
         todayAdapter.isCompletedListener = { reminderData, isChecked ->
             reminderData.isDone = isChecked
             reminderViewModel.update(reminderData)
@@ -65,10 +78,16 @@ class HomePageFragment : BaseFragment(R.layout.home_page_fragment) {
         val completed = dataList.count { it.isDone }
         if (dataList.isEmpty()){
             binding.taskProgress.progress = 0
-            binding.taskProgressText.text = "0"
+            binding.taskProgressText.text = "0%"
         }else{
-            binding.taskProgress.progress = ((completed.toFloat() / dataList.size) * 100).roundToInt()
-            binding.taskProgressText.text = String.format("%2d%%", binding.taskProgress.progress)
+            val updatedProgress = ((completed.toFloat() / dataList.size) * 100).roundToInt()
+            val animator = ValueAnimator.ofInt(binding.taskProgress.progress, updatedProgress)
+            animator.duration = 300
+            animator.addUpdateListener {
+                binding.taskProgress.progress = it.animatedValue as Int
+                binding.taskProgressText.text = String.format("%2d%%", it.animatedValue as Int)
+            }
+            animator.start()
         }
 
     }

@@ -2,7 +2,9 @@ package com.ubaid.myreminder.adapter
 
 import android.graphics.Typeface
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.ubaid.myreminder.R
 import com.ubaid.myreminder.data.ReminderData
@@ -12,34 +14,95 @@ import com.ubaid.myreminder.util.DateUtils
 class TodayReminderAdapter : RecyclerView.Adapter<TodayReminderAdapter.ViewHolder>() {
 
     var todayReminderList = arrayListOf<ReminderData>()
-    lateinit var isCompletedListener:(ReminderData, Boolean)->Unit
+    var selectionList = arrayListOf<ReminderData>()
+    lateinit var isCompletedListener: (ReminderData, Boolean) -> Unit
+    lateinit var isSelectingListener: (Boolean) -> Unit
+    var isSelecting: Boolean = false
+        set(value) {
+            field = value
+            if (!field) {
+                selectionList.clear()
+                isSelectingListener(false)
+            }
+        }
 
     inner class ViewHolder(private var binding: DailyListItemsBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun hold(reminderData: ReminderData) {
+        fun hold(reminderData: ReminderData, position: Int) {
+            val context = binding.root.context
             binding.title.text = reminderData.title
             binding.time.text = DateUtils.getFormattedTime(reminderData.time)
-            binding.checkbox.isChecked = reminderData.isDone
-            binding.categoryImg.setImageResource(reminderData.priority)
-            binding.checkbox.setOnCheckedChangeListener { buttonView, isChecked ->
-                val context = binding.root.context
-                if (isChecked){
-                    binding.root.setCardBackgroundColor(context.getColor(R.color.gray))
+            binding.root.setCardBackgroundColor(
+                ContextCompat.getColor(
+                    context,
+                    if (selectionList.contains(reminderData))
+                        R.color.lite_blue
+                    else
+                        R.color.white
+                )
+            )
+            binding.categoryImg.isChecked = reminderData.isDone.apply {
+                binding.status.setImageResource(
+                    if (this) R.drawable.check_mark
+                    else R.drawable
+                        .time
+                )
+            }
+
+
+            binding.categoryImg.setBackgroundResource(
+                when (reminderData.priority) {
+                    "High" -> R.drawable.bg_high
+                    "Medium" -> R.drawable.bg_med
+                    else -> R.drawable.bg_low
+                }
+            )
+            binding.notificationIcon.visibility = if (reminderData.isAlert)
+                View.VISIBLE
+            else
+                View.INVISIBLE
+
+            binding.root.setOnClickListener {
+                if (selectionList.any { it.id == reminderData.id }) {
+                    selectionList.remove(reminderData)
+                    checkIfSelecting(position)
+                } else if (isSelecting) {
+                    selectionList.add(reminderData)
+                    checkIfSelecting(position)
+                }
+            }
+
+            binding.root.setOnLongClickListener {
+                selectionList.add(reminderData)
+                checkIfSelecting(position)
+                true
+            }
+
+            binding.categoryImg.setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked) {
                     binding.title.setTypeface(binding.title.typeface, Typeface.ITALIC)
                     binding.time.setTypeface(binding.time.typeface, Typeface.ITALIC)
+                    binding.status.setImageResource(R.drawable.check_mark)
                 } else {
-                    binding.root.setCardBackgroundColor(context.getColor(R.color.white))
                     binding.title.setTypeface(binding.title.typeface, Typeface.BOLD)
                     binding.time.typeface = null
+                    binding.status.setImageResource(R.drawable.time)
                 }
-                isCompletedListener(reminderData,isChecked)
+                isCompletedListener(reminderData, isChecked)
             }
+        }
+
+        private fun checkIfSelecting(position: Int) {
+            isSelecting = selectionList.isNotEmpty()
+            isSelectingListener(isSelecting)
+            notifyItemChanged(position)
         }
 
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = DailyListItemsBinding.inflate(LayoutInflater.from(parent.context))
+        val binding =
+            DailyListItemsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
@@ -48,7 +111,7 @@ class TodayReminderAdapter : RecyclerView.Adapter<TodayReminderAdapter.ViewHolde
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.hold(todayReminderList[position])
+        holder.hold(todayReminderList[position], position)
     }
 
 }

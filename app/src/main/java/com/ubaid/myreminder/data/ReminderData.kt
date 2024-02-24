@@ -7,7 +7,8 @@ data class ReminderData(
     var isDone: Boolean,
     var title: String,
     var time: Long,
-    var priority: Int,
+    var priority: String,
+    var isAlert:Boolean,
 ) {
-    constructor() : this("", false, "", 0L, 0)
+    constructor() : this("", false, "", 0L, "", false)
 }

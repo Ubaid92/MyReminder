@@ -15,6 +15,8 @@ class AndroidAlarmScheduler (private val context: Context):AlarmScheduler{
         val intent = Intent(context, AlarmReceiver::class.java).apply {
             putExtra("title", item.title)
             putExtra("id", item.id)
+            putExtra("priority", item.priority)
+            putExtra("time", item.time)
         }
         intent.action = "Reminder"
 

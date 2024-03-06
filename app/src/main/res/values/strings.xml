@@ -3,4 +3,8 @@
     <string name="server_client_id">771811999959-4571db71dab6tsqc5m1fnbcs18un8d2o.apps.googleusercontent.com</string>
     <string name="welcome">Welcome !</string>
     <string name="progress">Progress</string>
+    <string name="all_reminders_list">All Reminders List</string>
+    <string name="total_progress_nsummary">Total Progress\nSummary</string>
+    <string name="edit_selected">Edit Selected</string>
+    <string name="delete_selected">Delete Selected</string>
 </resources>

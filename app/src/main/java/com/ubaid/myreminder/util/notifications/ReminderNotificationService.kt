@@ -9,7 +9,7 @@ import androidx.core.app.NotificationCompat
 import com.ubaid.myreminder.MainActivity
 import com.ubaid.myreminder.R
 import com.ubaid.myreminder.data.ReminderData
-import com.ubaid.myreminder.util.DateUtils
+import com.ubaid.myreminder.util.DateUtils1
 
 
 object ReminderNotificationService {
@@ -20,7 +20,7 @@ object ReminderNotificationService {
 
         val notification = NotificationCompat.Builder(context, REMINDER_CHANNEL)
             .setContentTitle(reminderData.title)
-            .setContentText(DateUtils.getFormattedTime(reminderData.time))
+            .setContentText(DateUtils1.getFormattedTime(reminderData.time))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setContentIntent(createMainActivityIntent(context))
             .setSmallIcon(getPriorityIcon(reminderData.priority))

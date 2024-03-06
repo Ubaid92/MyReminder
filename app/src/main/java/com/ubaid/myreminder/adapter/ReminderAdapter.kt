@@ -9,13 +9,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ubaid.myreminder.R
 import com.ubaid.myreminder.data.ReminderData
 import com.ubaid.myreminder.databinding.DailyListItemsBinding
-import com.ubaid.myreminder.util.DateUtils
+import com.ubaid.myreminder.util.DateUtils1
 
-class TodayReminderAdapter : RecyclerView.Adapter<TodayReminderAdapter.ViewHolder>() {
+class ReminderAdapter : RecyclerView.Adapter<ReminderAdapter.ViewHolder>() {
 
     var todayReminderList = arrayListOf<ReminderData>()
     var selectionList = arrayListOf<ReminderData>()
     lateinit var isCompletedListener: (ReminderData, Boolean) -> Unit
+    lateinit var isAlarmListener: (ReminderData, Boolean) -> Unit
     lateinit var isSelectingListener: (Boolean) -> Unit
     var isSelecting: Boolean = false
         set(value) {
@@ -23,6 +24,7 @@ class TodayReminderAdapter : RecyclerView.Adapter<TodayReminderAdapter.ViewHolde
             if (!field) {
                 selectionList.clear()
                 isSelectingListener(false)
+                notifyDataSetChanged()
             }
         }
 
@@ -31,7 +33,7 @@ class TodayReminderAdapter : RecyclerView.Adapter<TodayReminderAdapter.ViewHolde
         fun hold(reminderData: ReminderData, position: Int) {
             val context = binding.root.context
             binding.title.text = reminderData.title
-            binding.time.text = DateUtils.getFormattedTime(reminderData.time)
+            binding.time.text = DateUtils1.getFormattedTimeAndDate(reminderData.time)
             binding.root.setCardBackgroundColor(
                 ContextCompat.getColor(
                     context,
@@ -49,6 +51,13 @@ class TodayReminderAdapter : RecyclerView.Adapter<TodayReminderAdapter.ViewHolde
                 )
             }
 
+            binding.notificationIcon.setOnCheckedChangeListener { _, isChecked ->
+                binding.notificationIcon.setBackgroundResource(
+                    if (isChecked) R.drawable.notification_icon
+                    else R.drawable.disabled
+                )
+                isAlarmListener(reminderData, isChecked)
+            }
 
             binding.categoryImg.setBackgroundResource(
                 when (reminderData.priority) {
@@ -57,10 +66,6 @@ class TodayReminderAdapter : RecyclerView.Adapter<TodayReminderAdapter.ViewHolde
                     else -> R.drawable.bg_low
                 }
             )
-            binding.notificationIcon.visibility = if (reminderData.isAlert)
-                View.VISIBLE
-            else
-                View.INVISIBLE
 
             binding.root.setOnClickListener {
                 if (selectionList.any { it.id == reminderData.id }) {

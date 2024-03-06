@@ -12,20 +12,28 @@ class ReminderRepository {
         firebaseDb.saveToDatabase(reminderList)
     }
 
-    fun deleteReminder(reminderData: ReminderData){
+    fun deleteReminder(reminderData: ReminderData) {
         reminderList.remove(reminderData)
         firebaseDb.saveToDatabase(reminderList)
     }
 
+    fun editReminder(reminderData: ReminderData) {
+        val index= reminderList.indexOfFirst { it.id == reminderData.id }
+        reminderList[index] = reminderData
+        firebaseDb.saveToDatabase(reminderList)
+    }
+
     fun update(reminderData: ReminderData) {
-        reminderList.find { it.id == reminderData.id }?.isDone = reminderData.isDone
+        val itemFromList = reminderList.find { it.id == reminderData.id }
+        itemFromList?.isDone = reminderData.isDone
+        itemFromList?.isAlert = reminderData.isAlert
         firebaseDb.saveToDatabase(reminderList)
     }
 
     fun getAllData() = reminderList
 
-    fun getDataAsPerEmail(callback:(ArrayList<ReminderData>)->Unit){
-        firebaseDb.getData{
+    fun getDataAsPerEmail(callback: (ArrayList<ReminderData>) -> Unit) {
+        firebaseDb.getData {
             reminderList.clear()
             reminderList.addAll(it)
             callback(it)
